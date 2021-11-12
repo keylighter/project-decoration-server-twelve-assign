@@ -18,6 +18,9 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
+//heroku link
+// https://lit-plains-82210.herokuapp.com/products
+
 async function run() {
 
     try {
@@ -28,20 +31,27 @@ async function run() {
 
         //get api
 
+        //show 6 products and all products
         app.get('/products', async (req, res) => {
             const cursor = productCollection.find({});
 
-            const products = await cursor.limit(6).toArray();
+            const products = await cursor.toArray();
             // console.log(products);
             res.send(products);
-        })
-        app.get('/exploreproducts', async (req, res) => {
-            const cursor = productCollection.find({});
 
-            const exploreProducts = await cursor.toArray();
-            // console.log(products);
-            res.send(exploreProducts);
-        })
+        });
+
+        // //show all products
+        // app.get('/exploreproducts', async (req, res) => {
+        //     const cursor = productCollection.find({});
+
+        //     const exploreProducts = await cursor.toArray();
+        //     // console.log(products);
+        //     res.send(exploreProducts);
+        // });
+
+
+
     }
     finally {
         // await client.close();
