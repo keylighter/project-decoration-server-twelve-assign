@@ -29,7 +29,19 @@ async function run() {
         const database = client.db("Decoration");
         const productCollection = database.collection("products");
 
+        const orderCollection = database.collection("orders");
+
         //get api
+
+        //get orders list according to user email 
+        app.get('/orders', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email }
+
+            const cursor = orderCollection.find(query);
+            const orders = await cursor.toArray();
+            res.json(orders);
+        })
 
         //show 6 products and all products
         app.get('/products', async (req, res) => {
@@ -41,14 +53,17 @@ async function run() {
 
         });
 
-        // //show all products
-        // app.get('/exploreproducts', async (req, res) => {
-        //     const cursor = productCollection.find({});
 
-        //     const exploreProducts = await cursor.toArray();
-        //     // console.log(products);
-        //     res.send(exploreProducts);
-        // });
+        // posting -orders
+
+        app.post('/orders', async (req, res) => {
+            const order = req.body;
+
+            const result = await orderCollection.insertOne(order);
+
+            console.log(result);
+            res.json(result);
+        });
 
 
 
