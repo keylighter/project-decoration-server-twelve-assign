@@ -31,6 +31,8 @@ async function run() {
 
         const orderCollection = database.collection("orders");
 
+        const usersCollection = database.collection('users');
+
         //get api
 
         //get orders list according to user email 
@@ -66,6 +68,50 @@ async function run() {
         });
 
 
+        //Users
+
+
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            console.log(req.body);
+            const result = await usersCollection.insertOne(user);
+            console.log(result);
+            res.json(result);
+        })
+
+
+        app.put('/users', async (req, res) => {
+            const user = req.body;
+
+
+            const filter = { email: user.email };
+
+
+
+            const options = { upsert: true };
+
+
+
+            const updateDoc = {
+                $set: user
+            };
+
+            const result = await usersCollection.updateOne(filter, updateDoc, options);
+
+            res.json(result);
+
+        });
+
+
+        app.put('/users/admin', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email };
+            const updateDoc = { $set: { role: 'admin' } };
+            const result = await usersCollection.updateOne(filter, updateDoc);
+            res.json(result);
+
+        })
+
 
     }
     finally {
@@ -82,5 +128,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Example app listening at mmmmm aaa ${port}`)
+    console.log(`Example app listening at  ${port}`)
 });
